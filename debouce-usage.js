@@ -17,17 +17,16 @@ export default function App() {
     })
   }
 
-  function debounce(fn, delay=1000){
+  const debounce = (func, delay = 500) => {
     let timer;
-    return function(...args){
-      if(timer){
-        clearTimeout(timer)
-      }
-     timer = setTimeout(()=>{
-        fn(...args);
-      }, delay)
-    }
-  }
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+  
   const debounceHandler = debounce(dummyData);
 
   return (
