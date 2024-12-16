@@ -5,7 +5,7 @@ function debounce(fn, delay){
             clearTimeout(timer)
         }
         timer = setTimeout(()=>{
-            fn()
+            fn(...args)
         }, delay)
     }
     
