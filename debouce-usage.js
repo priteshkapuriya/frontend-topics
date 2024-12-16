@@ -1,48 +1,33 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import "./styles.css";
 
 export default function App() {
-  const refData = ['apple', 'mango'];
-  const [resultData, setResult] = useState([])
-  function dummyData(e){
-    console.log(e.target.value);
-    return new Promise((resolve, reject) => {
-      setTimeout(()=>{
-         const myRes = refData.filter(
-          (data) => {
-            return data.includes(e.target.value)
-          })
-        setResult(myRes)
-      }, 1000)
-    })
-  }
+  const [inputVal, setInputVal] = useState("");
+  const [debounced_val, setDebouncedVal] = useState(inputVal);
 
-  const debounce = (func, delay = 500) => {
+  const handleChange = (e) => {
+    setInputVal(e.target.value);
+    debouncedHandle(e.target.value);
+  };
+
+  const debounce = (fn, delay) => {
     let timer;
-    return (...args) => {
-      clearTimeout(timer);
+    return function (...args) {
+      if (timer) {
+        clearTimeout(timer);
+      }
       timer = setTimeout(() => {
-        func(...args);
+        fn(...args);
       }, delay);
     };
   };
-  
-  const debounceHandler = debounce(dummyData);
+
+  const debouncedHandle = useCallback(debounce(setDebouncedVal, 1000), []);
 
   return (
     <div className="App">
-      <input type='text' onChange={debounceHandler} />
-      <div>
-        {
-          resultData.map((result)=>{
-            return <ul>
-              <li>
-                {result}
-              </li>
-            </ul>
-          })
-        }
-      </div>
+      <input value={inputVal} onChange={handleChange} />
+      <div>{debounced_val}</div>
     </div>
   );
 }
